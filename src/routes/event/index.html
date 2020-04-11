@@ -1,0 +1,32 @@
+<script>
+  import { currentEvent } from "./EventModel";
+
+  let matches = ["Brent vs Barry"];
+
+  const enterResult = () => {
+    matches = [...matches, "Brent vs Jeremy"];
+  };
+</script>
+
+<h1>KOH</h1>
+
+<table data-cy="teams">
+  <tr>
+    <td data-cy="team">Brent</td>
+    <td data-cy="team">Barry</td>
+    <td data-cy="team">Jeremy</td>
+  </tr>
+</table>
+
+<table data-cy="matches">
+  <tr>
+    {#each matches as match}
+    <td data-cy="match">
+      {match}
+      <button data-cy="enter-result" on:click="{enterResult}">
+        Enter Result
+      </button>
+    </td>
+    {/each}
+  </tr>
+</table>
