@@ -9,14 +9,18 @@
     "start": "node __sapper__/build",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test": "run-p --race dev cy:run"
+    "test": "run-p --race dev cy:run",
+    "firebase": "firebase emulators:start --only firestore"
   },
   "dependencies": {
     "compression": "^1.7.1",
     "cypress": "^4.3.0",
+    "cypress-firebase": "^1.1.0",
     "firebase": "^7.13.1",
+    "firebase-admin": "^8.10.0",
     "firebaseui": "^4.5.0",
     "polka": "next",
+    "rxfire": "^3.12.0",
     "sirv": "^0.4.0",
     "ws": "^7.2.3",
     "xmlhttprequest": "^1.8.0"
@@ -31,6 +35,7 @@
     "@rollup/plugin-node-resolve": "^7.0.0",
     "@rollup/plugin-replace": "^2.2.0",
     "@types/node": "^13.11.1",
+    "firebase-server": "^1.1.0",
     "npm-run-all": "^4.1.5",
     "rollup": "^1.20.0",
     "rollup-plugin-babel": "^4.0.2",

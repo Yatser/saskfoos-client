@@ -1,32 +1,51 @@
 <script>
-  import { currentEvent } from "./EventModel";
+  import { stores } from "@sapper/app";
+  const { page } = stores();
+  import { db } from "../../firebase.js";
+  import { collectionData } from "rxfire/firestore";
+  import { startWith } from "rxjs/operators";
+  import { onMount } from "svelte";
 
-  let matches = ["Brent vs Barry"];
+  if ($page.host.startsWith("localhost")) {
+    db.settings({ host: "localhost:8080", ssl: false });
+  }
 
-  const enterResult = () => {
-    matches = [...matches, "Brent vs Jeremy"];
-  };
+  let matches = null;
+  let teams = null;
+
+  onMount(async () => {
+    matches = collectionData(db.collection("matches"), "id").pipe(
+      startWith([])
+    );
+    teams = collectionData(db.collection("teams"), "id").pipe(startWith([]));
+  });
+
+  function enterResult() {
+    db.collection("matches").add({ teams: "Brent vs Jeremy" });
+  }
 </script>
 
 <h1>KOH</h1>
 
-<table data-cy="teams">
+{#if teams !== null}
+<table data-testid="teams">
   <tr>
-    <td data-cy="team">Brent</td>
-    <td data-cy="team">Barry</td>
-    <td data-cy="team">Jeremy</td>
+    {#each $teams as team}
+    <td data-testid="team">{team}</td>
+    {/each}
   </tr>
 </table>
-
-<table data-cy="matches">
+{/if} {#if matches !== null}
+<table data-testid="matches">
   <tr>
-    {#each matches as match}
-    <td data-cy="match">
-      {match}
-      <button data-cy="enter-result" on:click="{enterResult}">
+    {#each $matches as match}
+    <td data-testid="match">
+      {match.teams}
+      <button data-testid="enter-result" on:click="{enterResult}">
         Enter Result
       </button>
     </td>
     {/each}
   </tr>
 </table>
+{/if}

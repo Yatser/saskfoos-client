@@ -1,5 +1,4 @@
 /// <reference types="Cypress" />
-
 describe("Current event", () => {
   beforeEach(() => {
     cy.visit("/event");
@@ -16,41 +15,35 @@ describe("KOH event", () => {
   });
 
   it("shows a list of the players in the event", () => {
-    cy.get("[data-cy=teams] [data-cy=team]")
-      .should("have.length", 3)
-      .and(($teams) => {
-        expect($teams.get(0).textContent).to.equal("Brent");
-        expect($teams.get(1).textContent).to.equal("Barry");
-        expect($teams.get(2).textContent).to.equal("Jeremy");
-      });
+    cy.window().then(win => {
+      cy.get("[data-testid=teams] [data-testid=team]")
+        .should("have.length", 3)
+        .and(($teams) => {
+          expect($teams.map(t => {debugger; return ''})).to.deep.eq(win.teams);
+        });
+    });
   });
 
   it("shows a list of the first called matches", () => {
-    cy.get("[data-cy=matches]").contains("[data-cy=match]", "Brent");
-    cy.get("[data-cy=matches]").contains("[data-cy=match]", "Barry");
+    cy.get("[data-testid=matches]").contains("[data-testid=match]", "Brent");
+    cy.get("[data-testid=matches]").contains("[data-testid=match]", "Barry");
   });
 
   it("enters the result when the button is clicked", () => {
-    cy.get("[data-cy=matches]")
-      .get("[data-cy=match]")
-      .get("button")
-      .contains("Enter Result")
+    cy.get("[data-testid=enter-result]")
       .click();
-      // TODO: Use the application API to find that the result was recorded
+    cy.window().then(win => {
+      expect(win.matches.length).to.equal(2);
+    });
   });
 
   describe("when a match is recorded", () => {
     beforeEach(() => {
-      // TODO: Refactor this to use the application API
-      cy.get("[data-cy=matches]")
-      .get("[data-cy=match]")
-      .get("button")
-      .contains("Enter Result")
-      .click();
+      cy.window().invoke('enterResult')
     });
 
     it("should show the next match", () => {
-      cy.get("[data-cy=matches] [data-cy=match]").should("have.length", 2);
+      cy.get("[data-testid=matches] [data-testid=match]").should("have.length", 2);
     });
 
     describe("the finished match", () => {
@@ -59,8 +52,8 @@ describe("KOH event", () => {
 
     describe("the new match", () => {
       it("should contain the winning team from the last match, and the first team in the waiting list", () => {
-        cy.get("[data-cy=matches]").contains("Brent");
-        cy.get("[data-cy=matches]").contains("Jeremy");
+        cy.get("[data-testid=matches]").contains("Brent");
+        cy.get("[data-testid=matches]").contains("Jeremy");
       });
     });
   });
