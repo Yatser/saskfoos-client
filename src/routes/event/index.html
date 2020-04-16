@@ -5,9 +5,11 @@
 
   let matches = null;
   let teams = null;
+  let db = null;
 
   onMount(async () => {
-    const { db } = await import("../../firebase.js");
+    const module = await import("../../firebase.js");
+    db = module.db;
     matches = collectionData(db.collection("matches"), "id").pipe(
       startWith([])
     );
@@ -21,7 +23,7 @@
 
 <h1>KOH</h1>
 
-{#if teams !== null}
+{#if teams}
 <table data-testid="teams">
   <tr>
     {#each $teams as team}
@@ -29,7 +31,7 @@
     {/each}
   </tr>
 </table>
-{/if} {#if matches !== null}
+{/if} {#if matches}
 <table data-testid="matches">
   <tr>
     {#each $matches as match}

@@ -7,6 +7,7 @@ describe("Current event", () => {
 
 describe("KOH event", () => {
   beforeEach(() => {
+    cy.task('seedMatches');
     cy.visit("/event");
   });
 

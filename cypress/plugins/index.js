@@ -10,8 +10,18 @@
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
+var admin = require("firebase-admin");
+var { firebaseConfig } = require("../../src/common.js");
+
+admin.initializeApp(firebaseConfig);
+
+const db = admin.firestore();
+db.settings({ host: "localhost:8080", ssl: false });
 
 module.exports = (on, config) => {
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
-}
+  on("task", {
+    seedMatches() {
+      return db.collection("matches").add({ teams: "Brent vs Jeremy" });
+    },
+  });
+};
