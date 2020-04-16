@@ -1,19 +1,13 @@
 <script>
-  import { stores } from "@sapper/app";
-  const { page } = stores();
-  import { db } from "../../firebase.js";
   import { collectionData } from "rxfire/firestore";
   import { startWith } from "rxjs/operators";
   import { onMount } from "svelte";
-
-  if ($page.host.startsWith("localhost")) {
-    db.settings({ host: "localhost:8080", ssl: false });
-  }
 
   let matches = null;
   let teams = null;
 
   onMount(async () => {
+    const { db } = await import("../../firebase.js");
     matches = collectionData(db.collection("matches"), "id").pipe(
       startWith([])
     );
