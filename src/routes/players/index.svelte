@@ -9,7 +9,7 @@
     onMount(async () => {
       const module = await import("../../firebase.js");
       db = module.db;
-      players = collectionData(db.collection("players"), "id").pipe(
+      players = collectionData(db.collection("players").orderBy("name"), "id").pipe(
         startWith([])
       );
     });
@@ -19,15 +19,25 @@
     <div class="container">
       <h1 class="title">Players</h1>
   
-      {#if players }
-      <ul>
-        {#each $players as player}
-        <li>
-          <a>{player.name}</a>
-        </li>
-        {/each}
-      </ul>
-      {/if}
+    {#if players}
+      <table class="table">
+
+        <thead>
+          <tr>
+            <th>Name</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {#each $players as player}
+            <tr>
+              <td>{player.name}</td>
+            </tr>
+          {/each}
+        </tbody>
+
+      </table>
+    {/if}
     </div>
   </section>
   
