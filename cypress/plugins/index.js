@@ -11,6 +11,7 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 var admin = require("firebase-admin");
+const firebase = require("@firebase/testing");
 var { firebaseConfig } = require("../../src/common.js");
 
 admin.initializeApp(firebaseConfig);
@@ -21,6 +22,7 @@ db.settings({ host: "localhost:8080", ssl: false });
 module.exports = (on, config) => {
   on("task", {
     seedMatches() {
+      firebase.clearFirestoreData(firebaseConfig);
       return db.collection("matches").add({ teams: "Brent vs Jeremy" });
     },
   });
